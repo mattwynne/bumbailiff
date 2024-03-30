@@ -4,7 +4,7 @@ SRC:=$(wildcard src/*)
 BUILDDIR:=./tmp
 
 check: $(TESTS:tests/%.sh=$(BUILDDIR)/tests/%.diff)
-	@echo Success
+	@echo Success ✅
 
 $(BUILDDIR)/tests/%.diff: $(BUILDDIR)/tests/%.output tests/%.expected
 	@diff --side-by-side $^ > $@ || ! cat $@
