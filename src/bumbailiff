@@ -10,7 +10,7 @@
 #   * It's NOT OK to have 3 TODOs that are 5 days old
 #   * It's NOT OK to have 1 TODO that is 14 days old
 #
-if [ -n "$BUMBAILIFF_IGNORE_LA_LA_LA" ] ; then exit 0 ; fi
+if [ -n "$BUMBAILIFF_IGNORE_LA_LA_LA" ]; then exit 0; fi
 set -uf -o pipefail
 
 ICON_OK="🌱 "
@@ -26,34 +26,44 @@ LIGHT_GRAY='\033[0;37m'
 MAX_AGE=${1:-14}
 OK_AGE=$((${MAX_AGE} / 2))
 
-todos=$((git grep --files-with-matches "\(\/\/\|\#\)\s*TODO" -- "*.js" "*.jsx" "*.ts" "*.tsx" "*.rb" "*.feature" "*.java") | xargs -I % sh -c 'echo %; git blame --date=raw % | grep "\(\/\/\|\#\)\s*TODO"')
-
-scan_result=$?
-
-if [[ $scan_result -ne 0 && $scan_result -ne 1 ]]; then
+if ! git status >/dev/null 2>&1; then
   echo "TODOs could not be scanned, make sure you're running bumbailiff on a Git repository."
-  exit $scan_result
+  exit 1
 fi
+
+function locations() {
+  git grep --line-number "^\(\/\/\|\#\)\s*TODO" 2>/dev/null | while read -r output; do
+    [[ $output == "" ]] && echo "No TODOs found." && exit 0
+    location="$(echo "$output" | cut -d ':' -f1,2)"
+    echo "$location"
+  done
+}
+
+# todos=$((git grep --files-with-matches "\(\/\/\|\#\)\s*TODO" -- "*.js" "*.jsx" "*.ts" "*.tsx" "*.rb" "*.feature" "*.java") |
+# xargs -I % sh -c 'echo %; git blame --date=raw % |
+# grep "\(\/\/\|\#\)\s*TODO"')
 
 now_seconds_since_epoch=$(date +%s)
 total_days=0
 
-while read -r line; do
+locations | while read -r location; do
+  echo "${location}"
+  file=$(echo "${location}" | cut -d ':' -f1)
+  line_number=$(echo "${location}" | cut -d ':' -f2)
+  line=$(git blame --date=raw -L "$line_number" "$file")
   if [[ "${line}" =~ \(.*([0-9]{10}).*\) ]]; then
     commit_seconds_since_epoch=${BASH_REMATCH[1]}
-    days_old=$(( (${now_seconds_since_epoch} - ${commit_seconds_since_epoch}) / 86400 ))
+    days_old=$(((${now_seconds_since_epoch} - ${commit_seconds_since_epoch}) / 86400))
     total_days=$((${total_days} + ${days_old}))
     shopt -s extglob
     location="${line%// TODO*}"
     location="${location%%*( )}"
     todo="${line##*// }"
 
-    if ((${days_old}<=${OK_AGE}))
-    then
+    if ((${days_old} <= ${OK_AGE})); then
       color="${GREEN}"
       icon=${ICON_OK}
-    elif ((${days_old}<=${MAX_AGE}))
-    then
+    elif ((${days_old} <= ${MAX_AGE})); then
       color="${ORANGE}"
       icon=${ICON_WARNING}
     else
@@ -64,15 +74,13 @@ while read -r line; do
   else
     echo -e "${BOLD}${line}${NC}"
   fi
-done <<< "${todos}"
+done
 
 status=0
-if ((${total_days}<=${OK_AGE}))
-then
+if ((${total_days} <= ${OK_AGE})); then
   color="${GREEN}"
   icon=${ICON_OK}
-elif ((${total_days}<=${MAX_AGE}))
-then
+elif ((${total_days} <= ${MAX_AGE})); then
   color="${ORANGE}"
   icon=${ICON_WARNING}
 else
