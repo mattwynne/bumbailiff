@@ -32,7 +32,7 @@ if ! git status >/dev/null 2>&1; then
 fi
 
 function locations() {
-  git grep --line-number "^\(\/\/\|\#\)\s*TODO" 2>/dev/null | while read -r output; do
+  git grep --line-number "TODO: " 2>/dev/null | while read -r output; do
     [[ $output == "" ]] && echo "No TODOs found." && exit 0
     location="$(echo "$output" | cut -d ':' -f1,2)"
     echo "$location"
@@ -53,7 +53,7 @@ while read -r location; do
     age=$(((now - timestamp) / 86400))
     total_days=$((total_days + age))
     location="$file:$line_number"
-    todo=$(git blame --pretty=format:'%h' -L "$line_number,$line_number" -s "$file" | cut -d ' ' -f3- | grep -o 'TODO: .*')
+    todo=$(git show "HEAD:$file" | sed -n "${line_number},${line_number}p" | grep -o "TODO:.*")
     author=$(git show --format='%an' -s "${commit}")
 
     if (("$age" <= "$OK_AGE")); then
