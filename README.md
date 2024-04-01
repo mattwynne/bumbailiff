@@ -12,7 +12,7 @@ There are several ways of installing and running bumbailiff.
 
 Download and decompress the archive of this repository in the directory of your choice:
 
-    curl https://raw.githubusercontent.com/mattwynne/bumbailiff/main/src/bumbailiff
+    curl -Os https://raw.githubusercontent.com/mattwynne/bumbailiff/main/src/bumbailiff
 
 ### Node.js / NPM
 
