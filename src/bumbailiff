@@ -39,48 +39,44 @@ function locations() {
   done
 }
 
-# todos=$((git grep --files-with-matches "\(\/\/\|\#\)\s*TODO" -- "*.js" "*.jsx" "*.ts" "*.tsx" "*.rb" "*.feature" "*.java") |
-# xargs -I % sh -c 'echo %; git blame --date=raw % |
-# grep "\(\/\/\|\#\)\s*TODO"')
-
-now_seconds_since_epoch=$(date +%s)
+now=$(date +%s)
 total_days=0
 
-locations | while read -r location; do
-  echo "${location}"
+while read -r location; do
+  echo -e "${BOLD}${location}${NC}"
   file=$(echo "${location}" | cut -d ':' -f1)
   line_number=$(echo "${location}" | cut -d ':' -f2)
+  commit=$(git blame -L "$line_number,$line_number" "$file" | cut -d ' ' -f1)
   line=$(git blame --date=raw -L "$line_number" "$file")
   if [[ "${line}" =~ \(.*([0-9]{10}).*\) ]]; then
-    commit_seconds_since_epoch=${BASH_REMATCH[1]}
-    days_old=$(((${now_seconds_since_epoch} - ${commit_seconds_since_epoch}) / 86400))
-    total_days=$((${total_days} + ${days_old}))
-    shopt -s extglob
-    location="${line%// TODO*}"
-    location="${location%%*( )}"
-    todo="${line##*// }"
+    timestamp=$(git show --format=%ct -s "${commit}")
+    age=$(((now - timestamp) / 86400))
+    total_days=$((total_days + age))
+    location="$file:$line_number"
+    todo=$(git blame --pretty=format:'%h' -L "$line_number,$line_number" -s "$file" | cut -d ' ' -f3- | grep -o 'TODO: .*')
+    author=$(git show --format='%an' -s "${commit}")
 
-    if ((${days_old} <= ${OK_AGE})); then
-      color="${GREEN}"
+    if (("$age" <= "$OK_AGE")); then
+      color="$GREEN"
       icon=${ICON_OK}
-    elif ((${days_old} <= ${MAX_AGE})); then
-      color="${ORANGE}"
+    elif (("$age" <= "$MAX_AGE")); then
+      color="$ORANGE"
       icon=${ICON_WARNING}
     else
-      color="${RED}"
+      color="$RED"
       icon=${ICON_KO}
     fi
-    echo -e "${color}${days_old} days old${LIGHT_GRAY} ${location}${NC}\n${todo}\n"
+    echo -e "${color}${age} days old${LIGHT_GRAY} ${commit} (${author})${NC}\n${todo}\n"
   else
     echo -e "${BOLD}${line}${NC}"
   fi
-done
+done < <(locations)
 
 status=0
-if ((${total_days} <= ${OK_AGE})); then
+if ((total_days <= OK_AGE)); then
   color="${GREEN}"
   icon=${ICON_OK}
-elif ((${total_days} <= ${MAX_AGE})); then
+elif ((total_days <= MAX_AGE)); then
   color="${ORANGE}"
   icon=${ICON_WARNING}
 else
