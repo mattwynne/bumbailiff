@@ -8,6 +8,12 @@ Check out our [blog post](https://cucumber.io/blog/bdd/todo-or-not-todo/) to lea
 
 There are several ways of installing and running bumbailiff.
 
+### Manual download
+
+Download and decompress the archive of this repository in the directory of your choice:
+
+    curl https://raw.githubusercontent.com/mattwynne/bumbailiff/main/src/bumbailiff
+
 ### Node.js / NPM
 
 If you have [Node.js](https://nodejs.org/en/) and [NPM](https://docs.npmjs.com/about-npm) installed, you can use [`npx`](https://docs.npmjs.com/cli/v7/commands/npx) to execute bumbailiff:
@@ -21,15 +27,6 @@ You can add bumbailiff to your Node.js project:
 Or alternatively:
 
     yarn add --dev bumbailiff
-
-### Manual download
-
-Download and decompress the archive of this repository in the directory of your choice:
-
-    curl -LO https://github.com/SmartBear/bumbailiff/archive/main.zip
-    unzip main.zip
-
-Add the location of the `bumbailiff-main/src` dir to your `$PATH`.
 
 ## Usage
 
