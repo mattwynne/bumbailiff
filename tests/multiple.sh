@@ -1,5 +1,6 @@
 #!/bin/bash
-source "$(dirname ${BASH_SOURCE[0]})/../test_helpers.sh"
+# shellcheck source=./test_helpers.sh
+source "../../../test_helpers.sh"
 export GIT_AUTHOR_NAME="Daisy Developer"
 export GIT_AUTHOR_EMAIL="daisy@developer.com"
 export GIT_AUTHOR_DATE="$(last_week)"
