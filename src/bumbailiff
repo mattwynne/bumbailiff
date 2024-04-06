@@ -31,6 +31,11 @@ if ! git status >/dev/null 2>&1; then
   exit 1
 fi
 
+if "$(git rev-parse --is-shallow-repository)"; then
+  echo "TODOs could not be scanned: this appears to be a shallow clone of your git repository. Make sure you clone with full depth."
+  exit 1
+fi
+
 function locations() {
   git grep --line-number "TODO: " 2>/dev/null | while read -r output; do
     [[ $output == "" ]] && echo "No TODOs found." && exit 0
