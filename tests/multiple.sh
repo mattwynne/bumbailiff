@@ -1,8 +1,7 @@
 #!/bin/bash
-# shellcheck source=./test_helpers.sh
-helpers="$(dirname "$0")/../test_helpers.sh"
-echo "$helpers"
-source "$helpers"
+root="$(realpath "$(dirname "$0")/..")"
+echo "$root"
+source "$root/test_helpers.sh"
 export GIT_AUTHOR_NAME="Daisy Developer"
 export GIT_AUTHOR_EMAIL="daisy@developer.com"
 export GIT_AUTHOR_DATE="$(last_week)"
