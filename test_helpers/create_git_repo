@@ -2,9 +2,9 @@
 
 set -e
 
-git init --quiet .
+git init --quiet --initial-branch=trunk
 git config commit.gpgSign false
 rm -rf .git/hooks/*
-git config user.email "daisy@example.com"
-git config user.name "Daisy Developer"
+git config --local user.email "daisy@example.com"
+git config --local user.name "Daisy Developer"
 git commit --quiet -m "Initial commit" --allow-empty

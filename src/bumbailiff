@@ -52,8 +52,7 @@ while read -r location; do
   file=$(echo "${location}" | cut -d ':' -f1)
   line_number=$(echo "${location}" | cut -d ':' -f2)
   commit=$(git blame -L "$line_number,$line_number" "$file" | cut -d ' ' -f1)
-  line=$(git blame --date=raw -L "$line_number" "$file")
-  if [[ "${line}" =~ \(.*([0-9]{10}).*\) ]]; then
+  if [[ "$commit" != "00000000" ]]; then
     timestamp=$(git show --format=%ct -s "${commit}")
     age=$(((now - timestamp) / 86400))
     total_days=$((total_days + age))
@@ -71,10 +70,14 @@ while read -r location; do
       color="$RED"
       icon=${ICON_KO}
     fi
-    echo -e "${color}${age} days old${LIGHT_GRAY} ${commit} (${author})${NC}\n${todo}\n"
   else
-    echo -e "${BOLD}${line}${NC}"
+    color="$GREEN"
+    age=0
+    commit="Not committed yet"
+    author="$(git config user.name)"
+    todo=$(sed -n "${line_number},${line_number}p" "$file" | grep -o "TODO:.*")
   fi
+  echo -e "${color}${age} days old${LIGHT_GRAY} ${commit} (${author})${NC}\n${todo}\n"
 done < <(locations)
 
 status=0
