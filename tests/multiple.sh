@@ -1,6 +1,8 @@
 #!/bin/bash
 root="$(realpath "$(dirname "$0")/..")"
 echo "$root"
+ls "$root"
+ls "$root/test_helpers.sh"
 source "$root/test_helpers.sh"
 export GIT_AUTHOR_NAME="Daisy Developer"
 export GIT_AUTHOR_EMAIL="daisy@developer.com"
