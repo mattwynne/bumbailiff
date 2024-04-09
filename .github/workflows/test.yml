@@ -3,14 +3,16 @@ name: Run tests
 on:
   push:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Run tests
-      run: make
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          git config --global user.email "test@example.com"
+          git config --global user.name "An Author"
+          make
