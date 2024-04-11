@@ -1,8 +1,6 @@
 #!/bin/bash
 # shellcheck source=./test_helpers.sh
 source "../../../test_helpers.sh"
-export GIT_AUTHOR_NAME="Daisy Developer"
-export GIT_AUTHOR_EMAIL="daisy@developer.com"
 export GIT_AUTHOR_DATE="$(last_week)"
 export GIT_COMMITTER_DATE="$(last_week)"
 mkdir -p "origin" && cd "origin" || exit

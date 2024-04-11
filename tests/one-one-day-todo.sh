@@ -1,7 +1,5 @@
 #!/bin/bash
 source "../../../test_helpers.sh"
-export GIT_AUTHOR_NAME="Daisy Developer"
-export GIT_AUTHOR_EMAIL="daisy@developer.com"
 export GIT_AUTHOR_DATE="$(yesterday)"
 export GIT_COMMITTER_DATE="$(yesterday)"
 mkdir -p git && cd git
