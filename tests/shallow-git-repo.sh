@@ -6,8 +6,7 @@ export GIT_AUTHOR_EMAIL="daisy@developer.com"
 export GIT_AUTHOR_DATE="$(last_week)"
 export GIT_COMMITTER_DATE="$(last_week)"
 mkdir -p "origin" && cd "origin" || exit
-git init --quiet .
-git config commit.gpgSign false
+create_git_repo
 git commit --quiet -m "Initial commit" --allow-empty
 echo "TODO: fix me" >a-file
 git add .
