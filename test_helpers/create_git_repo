@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+git init --quiet .
+git config commit.gpgSign false
+rm -rf .git/hooks/*
