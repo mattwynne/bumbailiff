@@ -24,7 +24,7 @@ BOLD='\033[1m'
 NC='\033[0m'
 LIGHT_GRAY='\033[0;37m'
 MAX_AGE=${1:-14}
-OK_AGE=$((${MAX_AGE} / 2))
+OK_AGE=$((MAX_AGE / 2))
 
 if ! git status >/dev/null 2>&1; then
   echo "TODOs could not be scanned, make sure you're running bumbailiff on a Git repository."
