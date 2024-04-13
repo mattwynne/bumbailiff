@@ -1,5 +1,4 @@
-mkdir -p "git" && cd "git"
+#!/bin/bash
 create_git_repo
-git commit --quiet -m "Initial commit" --allow-empty
 bumbailiff
 echo $?

@@ -1,19 +1,14 @@
 #!/bin/bash
-root="$(realpath "$(dirname "$0")/..")"
-source "$root/test_helpers.sh"
-export GIT_AUTHOR_DATE="$(last_week)"
-export GIT_COMMITTER_DATE="$(last_week)"
-mkdir -p git && cd "git"
+source "functions.sh"
+set_git_date "$(last_week)"
 create_git_repo
-git commit --quiet -m "Initial commit" --allow-empty
 echo """// TODO: remove semicolon
 alert('yo');
 // TODO: extract method
 """ >file.js
 git add .
 git commit --quiet --allow-empty -m "Add file.js"
-export GIT_AUTHOR_DATE="$(yesterday)"
-export GIT_COMMITTER_DATE="$(yesterday)"
+set_git_date "$(yesterday)"
 echo """# TODO: rewrite in javascript
 puts 'yo'
 """ >file.rb
