@@ -13,6 +13,9 @@
 if [ -n "$BUMBAILIFF_IGNORE_LA_LA_LA" ]; then exit 0; fi
 set -uf -o pipefail
 
+: "${BUMBAILIFF_EXTENSIONS:="*.js *.rb *.java *.ex *.exs"}"
+IFS=' ' read -r -a extensions <<<"$BUMBAILIFF_EXTENSIONS"
+
 ICON_OK="🌱 "
 ICON_WARNING="⚠️  "
 ICON_KO="⛔️ "
@@ -37,7 +40,7 @@ if "$(git rev-parse --is-shallow-repository)"; then
 fi
 
 function locations() {
-  git grep --line-number "TODO: " 2>/dev/null | grep -v bumbailiff | while read -r output; do
+  git grep --line-number "TODO: " -- "${extensions[@]}" 2>/dev/null | grep -v bumbailiff | while read -r output; do
     [[ $output == "" ]] && echo "No TODOs found." && exit 0
     location="$(echo "$output" | cut -d ':' -f1,2)"
     echo "$location"
