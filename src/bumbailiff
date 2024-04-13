@@ -37,7 +37,7 @@ if "$(git rev-parse --is-shallow-repository)"; then
 fi
 
 function locations() {
-  git grep --line-number "TODO: " 2>/dev/null | while read -r output; do
+  git grep --line-number "TODO: " 2>/dev/null | grep -v bumbailiff | while read -r output; do
     [[ $output == "" ]] && echo "No TODOs found." && exit 0
     location="$(echo "$output" | cut -d ':' -f1,2)"
     echo "$location"

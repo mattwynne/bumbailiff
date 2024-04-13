@@ -1,9 +1,6 @@
 #!/bin/bash
-# TODO: put these on path
-source "../../../test_helpers.sh"
-mkdir -p "git" && cd "git" || exit
+source "functions.sh"
 create_git_repo
-git commit --quiet -m "Initial commit" --allow-empty
 touch file.js
 git add .
 git commit --quiet --allow-empty -m "Add file.js"
