@@ -5,7 +5,7 @@ case $(uname -s) in
 		date -d "yesterday"
 	}
 	last_week() {
-		date -d "yesterday - 7 days"
+		date -d "today - 7 days"
 	}
 	;;
 "Darwin")

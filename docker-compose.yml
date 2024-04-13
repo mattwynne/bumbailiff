@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  test:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    command: sh -c "make clean && make"
